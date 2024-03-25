@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Text to Image</title>
+	<style>
+		img{
+			height: 4vh;
+			width: 4vh;
+			
+		}
+		.center{
+			display: flex;
+			height: 100vh;
+			justify-content: center;
+			align-items: center;
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0, 0, 0, 0.5)), url('bgweather.jpg');
+		}
+		.text-field{
+			margin-right: 2vh;
+			height: 7vh;
+			width: 90vh;
+			border-radius: 20vh;
+			font-size: 5vh;
+			font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+		}
+		#details{
+			color: white;
+			height: 100vh;
+		}
+		.desc-cus{
+			font-size: 3vh;
+			
+		}
+	</style>
+	<script>
+		var latt, long;
+		function findCoords(){
+			document.getElementById('details').style.display = "block";
+			var city = document.getElementById("city").value;
+			fetch("https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=fee9a6420fc2791c96cc952b75088ff8&units=metric")
+			.then(response =>{
+				return response.json();
+			}).then(data =>{
+				console.log(data);
+				document.getElementById('feels_like').textContent = data.main.feels_like;
+				document.getElementById('pressure').textContent = data.main.pressure;
+				
+				document.getElementById('temp').textContent = data.main.temp;
+
+				// document.getElementById('visibility').textContent = data.visibility;
+				document.getElementById('humidity').textContent = data.main.humidity;
+				document.getElementById('weather_description').textContent = data.weather[0].description;
+				// document.getElementById('weather_main').textContent = data.weather[0].main;
+				document.getElementById('wind_deg').textContent = data.wind.deg;
+				document.getElementById('wind_speed').textContent = data.wind.speed;
+				console.log(data.main.feels_like, data.main.humidity, data.main.pressure, data.main.temp, data.visibility, data.weather[0].description, data.weather[0].main, data.wind.deg, data.wind.speed)
+			})
+
+		}
+
+		function Text_Field_Animation(){
+			let id = null;
+
+			const elem = document.getElementById("forAnimationBud");
+			if (!elem.style.height){
+			let pos = 100;
+			clearInterval(id);
+			id = setInterval(frame, 2);
+			function frame() {
+				if (pos == 30) {
+					clearInterval(id);
+				} else {
+					pos--;
+					elem.style.height = pos + "vh";
+				}
+  			}
+			}
+		}
+	</script>
+
+</head>
+<body style="background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0, 0, 0, 0.8)), url('bgweather.jpg'); background-repeat: no-repeat; background-size: cover;">
+	
+	<div class="center" id="forAnimationBud">
+		<input type="text" class="text-field" id="city">
+		<div>
+			<button onclick="Text_Field_Animation(), findCoords()" style="border-radius: 50vh; width: 7vh; height: 7vh; background-color: white;">
+				<img style="margin-top: 2px; margin-right: 2px;" src="g9.jpg" alt="Generate Button">
+			</button>
+		</div>
+	</div>
+	
+	<div id="details" style="display: none;">
+		<!-- <hr> -->
+		<div class="desc-cus" style="padding: 1vh;">Description: <span id="weather_description"></span></div>
+		<!-- <div class="desc-cus" style="padding: 1vh;"><span id="weather_main"></span></div> -->
+		<hr style="margin-top: 6vh; margin-bottom: 6vh;">
+		<div style="font-size: 10vh; padding: 1vh;"><span id="temp"></span><sup>o</sup>C</div>
+		<div class="desc-cus" style="padding: 1vh;">Feels Like <span id="feels_like"></span><sup>o</sup>C</div>
+		<hr style="margin-top: 6vh; margin-bottom: 6vh;">
+		<div style="display: flex; position:relative;">
+			<div style="margin-right: 60%;">
+			<div class="desc-cus" style="padding: 1vh;">Humidity <span id="humidity"></span>%</div>
+			<div class="desc-cus" style="padding: 1vh;">Pressure <span id="pressure"></span>hPa</div>
+			</div>
+			<div>
+			<div class="desc-cus" style="padding: 1vh;">Wind Degree <span id="wind_deg" style="padding: 1vh;"></span>(degree)</div>
+			<div class="desc-cus" style="padding: 1vh;">Wind Speed <span id="wind_speed"></span> metre/sec</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
